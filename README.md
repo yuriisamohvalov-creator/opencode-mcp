@@ -1,11 +1,17 @@
 # opencode-v2-mcp
 
-MCP-сервер, который позволяет Claude Code (или любому другому MCP-клиенту)
-делегировать выполнение ограниченных задач по написанию кода локальному
-[OpenCode](https://opencode.ai) **v2.x**. Один инструмент — `opencode_execute` —
-запускает `opencode run --format json`, парсит NDJSON-вывод и возвращает
-компактный отчёт: текст ответа, `git diff --stat`, `git status --short`,
-код возврата и `sessionID`.
+MCP-сервер, который позволяет **Claude Code, Codex CLI, Cursor-agent** (или
+любому другому MCP-клиенту) делегировать выполнение ограниченных задач по
+написанию кода локальному [OpenCode](https://opencode.ai) **v2.x**. Один
+инструмент — `opencode_execute` — запускает `opencode run --format json`,
+парсит NDJSON-вывод и возвращает компактный отчёт: текст ответа,
+`git diff --stat`, `git status --short`, код возврата и `sessionID`.
+
+Сервер реализован через стандартный `@modelcontextprotocol/sdk`
+(stdio-транспорт) — он не завязан на конкретного клиента и работает
+одинаково с любым MCP-совместимым хостом без каких-либо доработок кода.
+Подключение к Claude Code, Codex CLI и Cursor-agent подтверждено вживую
+(разделы ниже).
 
 Написан по мотивам референсной реализации из community-инструкции
 «Claude Code Desktop → OpenCode v2 как субагент-исполнитель кода» и
@@ -58,6 +64,69 @@ claude mcp get opencode-v2
 
 После подключения новой сессии Claude Code (или рестарта текущей)
 инструмент `opencode_execute` доступен как `mcp__opencode-v2__opencode_execute`.
+
+## Подключение к Codex CLI
+
+```bash
+NODE_BIN="$(which node)"
+codex mcp add opencode-v2 \
+  --env HTTPS_PROXY=http://127.0.0.1:10808 --env HTTP_PROXY=http://127.0.0.1:10808 \
+  -- "$NODE_BIN" "$HOME/tools/opencode-mcp/server.mjs"
+codex mcp list   # должен показать opencode-v2 в статусе enabled
+```
+
+**Важно:** по умолчанию Codex блокирует вызовы MCP-инструментов approval-
+политикой, даже если `approval` выставлен в `never` — это особенность
+самого Codex, не обёртки. Запускайте с флагом `--approve-for-me`
+(безопасный режим через `workspace-write` sandbox, не с
+`--dangerously-bypass-approvals-and-sandbox`):
+
+```bash
+codex exec --approve-for-me "Use the opencode-v2 MCP tool opencode_execute with cwd=/path/to/project, agent=claude-worker, task='...'"
+```
+
+Если запускаете `codex exec` вне git-репозитория — понадобится ещё
+`--skip-git-repo-check`.
+
+## Подключение к Cursor-agent
+
+Cursor не предоставляет CLI-команду для добавления MCP-сервера — правьте
+конфиг-файл напрямую: `~/.cursor/mcp.json` (глобально) или
+`.cursor/mcp.json` в конкретном проекте. Формат идентичен Claude
+Code/Codex:
+
+```json
+{
+  "mcpServers": {
+    "opencode-v2": {
+      "command": "/absolute/path/to/node",
+      "args": ["/absolute/path/to/opencode-mcp/server.mjs"],
+      "env": {
+        "HTTPS_PROXY": "http://127.0.0.1:10808",
+        "HTTP_PROXY": "http://127.0.0.1:10808"
+      }
+    }
+  }
+}
+```
+
+После правки файла сервер нужно явно одобрить:
+
+```bash
+cursor-agent mcp list             # должен показать opencode-v2
+cursor-agent mcp enable opencode-v2
+```
+
+Использование в неинтерактивном режиме:
+
+```bash
+cursor-agent -p --output-format json --force \
+  "Use the opencode-v2 MCP tool opencode_execute with cwd=/path/to/project, agent=claude-worker, task='...'"
+```
+
+Первый вызов после добавления сервера обычно заметно медленнее
+последующих (холодный старт сессии cursor, наблюдалось ~20с против
+обычных 6–10с у прямого CLI-вызова `opencode`).
 
 ## Конфигурация проекта — только JSON-агент
 
