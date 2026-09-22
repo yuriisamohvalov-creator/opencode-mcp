@@ -34,7 +34,16 @@ below).
 
 ## Installation
 
-### Option 1 — from source
+### Option 1 — from npm (npmjs.org, recommended)
+
+Published as [`opencode2-mcp`](https://www.npmjs.com/package/opencode2-mcp)
+— fully public, installs with no authentication:
+
+```bash
+npm install -g opencode2-mcp
+```
+
+### Option 2 — from source
 
 ```bash
 git clone git@github.com:yuriisamohvalov-creator/opencode-mcp.git ~/tools/opencode-mcp
@@ -42,9 +51,9 @@ cd ~/tools/opencode-mcp
 npm install
 ```
 
-### Option 2 — from npm (GitHub Packages)
+### Option 3 — from GitHub Packages
 
-The package is published to GitHub Packages as
+The same package is also mirrored on GitHub Packages as
 [`@yuriisamohvalov-creator/opencode-v2-mcp`](https://github.com/yuriisamohvalov-creator/opencode-mcp/pkgs/npm/opencode-v2-mcp).
 **Note:** unlike npmjs.org, GitHub Packages requires authentication even
 for public packages — you'll need a `.npmrc` with the scoped registry and

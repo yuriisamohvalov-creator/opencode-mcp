@@ -34,7 +34,16 @@ MCP-сервер, который позволяет **Claude Code, Codex CLI, Cu
 
 ## Установка
 
-### Вариант 1 — из исходников
+### Вариант 1 — из npm (npmjs.org, рекомендуется)
+
+Пакет опубликован как [`opencode2-mcp`](https://www.npmjs.com/package/opencode2-mcp)
+— полностью публичный, ставится без авторизации:
+
+```bash
+npm install -g opencode2-mcp
+```
+
+### Вариант 2 — из исходников
 
 ```bash
 git clone git@github.com:yuriisamohvalov-creator/opencode-mcp.git ~/tools/opencode-mcp
@@ -42,9 +51,9 @@ cd ~/tools/opencode-mcp
 npm install
 ```
 
-### Вариант 2 — из npm (GitHub Packages)
+### Вариант 3 — из GitHub Packages
 
-Пакет опубликован в GitHub Packages как
+Тот же пакет также зеркалирован в GitHub Packages под именем
 [`@yuriisamohvalov-creator/opencode-v2-mcp`](https://github.com/yuriisamohvalov-creator/opencode-mcp/pkgs/npm/opencode-v2-mcp).
 **Важно:** в отличие от npmjs.org, GitHub Packages требует аутентификации
 даже для публичных пакетов — понадобится `.npmrc` со scoped-registry и

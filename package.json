@@ -1,5 +1,5 @@
 {
-  "name": "@yuriisamohvalov-creator/opencode-v2-mcp",
+  "name": "opencode2-mcp",
   "version": "0.1.0",
   "description": "MCP server that lets Claude Code, Codex CLI, Cursor-agent (or any MCP client) delegate bounded coding tasks to a local OpenCode v2.x instance",
   "license": "MIT",
@@ -10,7 +10,7 @@
   "type": "module",
   "main": "server.mjs",
   "bin": {
-    "opencode-v2-mcp": "server.mjs"
+    "opencode2-mcp": "server.mjs"
   },
   "files": [
     "server.mjs",
@@ -24,8 +24,5 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "zod": "^4.6.5"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
