@@ -34,10 +34,28 @@ below).
 
 ## Installation
 
+### Option 1 — from source
+
 ```bash
 git clone git@github.com:yuriisamohvalov-creator/opencode-mcp.git ~/tools/opencode-mcp
 cd ~/tools/opencode-mcp
 npm install
+```
+
+### Option 2 — from npm (GitHub Packages)
+
+The package is published to GitHub Packages as
+[`@yuriisamohvalov-creator/opencode-v2-mcp`](https://github.com/yuriisamohvalov-creator/opencode-mcp/pkgs/npm/opencode-v2-mcp).
+**Note:** unlike npmjs.org, GitHub Packages requires authentication even
+for public packages — you'll need a `.npmrc` with the scoped registry and
+a GitHub token with `read:packages` scope:
+
+```bash
+# ~/.npmrc or project-local
+echo "@yuriisamohvalov-creator:registry=https://npm.pkg.github.com" >> ~/.npmrc
+npm login --registry=https://npm.pkg.github.com --scope=@yuriisamohvalov-creator
+
+npm install -g @yuriisamohvalov-creator/opencode-v2-mcp
 ```
 
 ## Connecting to Claude Code
