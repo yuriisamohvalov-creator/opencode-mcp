@@ -1,6 +1,6 @@
 {
   "name": "opencode2-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MCP server that lets Claude Code, Codex CLI, Cursor-agent (or any MCP client) delegate bounded coding tasks to a local OpenCode v2.x instance",
   "license": "MIT",
   "repository": {
