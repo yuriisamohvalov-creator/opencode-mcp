@@ -1,5 +1,7 @@
 # opencode-v2-mcp
 
+*[English version](README.en.md)*
+
 MCP-сервер, который позволяет **Claude Code, Codex CLI, Cursor-agent** (или
 любому другому MCP-клиенту) делегировать выполнение ограниченных задач по
 написанию кода локальному [OpenCode](https://opencode.ai) **v2.x**. Один
