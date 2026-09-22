@@ -2,6 +2,10 @@
 
 *[Русская версия](README.md)*
 
+[![npm (npmjs.org)](https://img.shields.io/npm/v/opencode2-mcp?label=npmjs.org&color=cb3837)](https://www.npmjs.com/package/opencode2-mcp)
+[![GitHub Packages](https://img.shields.io/badge/GitHub%20Packages-%40yuriisamohvalov--creator%2Fopencode--v2--mcp-24292e?logo=github)](https://github.com/yuriisamohvalov-creator/opencode-mcp/pkgs/npm/opencode-v2-mcp)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 An MCP server that lets **Claude Code, Codex CLI, Cursor-agent** (or any
 other MCP client) delegate bounded coding tasks to a local
 [OpenCode](https://opencode.ai) **v2.x** instance. It exposes a single
