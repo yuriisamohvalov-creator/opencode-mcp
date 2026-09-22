@@ -25,6 +25,11 @@ patched with three fixes without which the wrapper does not work against
 a real `opencode v2.0.12` install (details in "Known ecosystem bugs"
 below).
 
+The full development history, diagnostics, and comparison against other
+community MCP wrappers (all of which fail against `opencode v2.x` for
+various reasons) live in `second-brain/opencode-subagent-mcp.md` (a
+personal note, not published).
+
 ## Requirements
 
 - **OpenCode v2.x**, installed and available on `PATH` (`opencode --version`
