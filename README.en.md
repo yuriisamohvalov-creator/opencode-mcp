@@ -213,3 +213,7 @@ against `opencode v2.0.12`. Three root causes and their fixes:
 - Does not replace review: the caller must independently check
   `diffStat`/`statusShort` and test results, not trust the `ok` field
   alone.
+
+## License
+
+[MIT](LICENSE)
