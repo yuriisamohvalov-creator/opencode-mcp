@@ -250,6 +250,17 @@ against `opencode v2.0.12`. Three root causes and their fixes:
   `diffStat`/`statusShort` and test results, not trust the `ok` field
   alone.
 
+## Related packages
+
+The same synchronous pattern (one blocking MCP tool, no separate
+check/kill) is also applied to the other two steps of the delegation
+chain:
+
+- [`codex-cli-sync-mcp`](https://github.com/yuriisamohvalov-creator/codex-mcp) —
+  the same kind of wrapper around Codex CLI (`codex exec`).
+- [`cursor-agent-sync-mcp`](https://github.com/yuriisamohvalov-creator/cursor-mcp) —
+  the same kind of wrapper around the Cursor-agent CLI (`cursor-agent -p`).
+
 ## License
 
 [MIT](LICENSE)
