@@ -251,10 +251,12 @@ frontmatter. JSON-агент через `opencode.json` работает над�
 ## Смежные пакеты
 
 Тот же синхронный паттерн (один блокирующий MCP-тул, без отдельного
-check/kill) применён и к двум другим шагам цепочки делегирования:
+check/kill) применён и к трём другим шагам цепочки делегирования:
 
 - [`codex-cli-sync-mcp`](https://github.com/yuriisamohvalov-creator/codex-mcp) —
   аналогичная обёртка над Codex CLI (`codex exec`).
+- [`cline-sync-mcp`](https://github.com/yuriisamohvalov-creator/cline-mcp) —
+  аналогичная обёртка над Cline CLI (`cline`).
 - [`cursor-agent-sync-mcp`](https://github.com/yuriisamohvalov-creator/cursor-mcp) —
   аналогичная обёртка над Cursor-agent CLI (`cursor-agent -p`).
 

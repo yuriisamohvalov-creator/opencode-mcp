@@ -253,11 +253,13 @@ against `opencode v2.0.12`. Three root causes and their fixes:
 ## Related packages
 
 The same synchronous pattern (one blocking MCP tool, no separate
-check/kill) is also applied to the other two steps of the delegation
+check/kill) is also applied to the other three steps of the delegation
 chain:
 
 - [`codex-cli-sync-mcp`](https://github.com/yuriisamohvalov-creator/codex-mcp) —
   the same kind of wrapper around Codex CLI (`codex exec`).
+- [`cline-sync-mcp`](https://github.com/yuriisamohvalov-creator/cline-mcp) —
+  the same kind of wrapper around Cline CLI (`cline`).
 - [`cursor-agent-sync-mcp`](https://github.com/yuriisamohvalov-creator/cursor-mcp) —
   the same kind of wrapper around the Cursor-agent CLI (`cursor-agent -p`).
 
