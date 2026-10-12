@@ -57,6 +57,8 @@ async function runOpenCode(input) {
     let sessionID = null;
     const textParts = [];
     let lastStepFinish = null;
+    const toolsUsed = [];
+    const errorEvents = [];
 
     const timer = setTimeout(() => {
       killedByTimeout = true;
@@ -80,6 +82,12 @@ async function runOpenCode(input) {
           if (event.sessionID) sessionID = event.sessionID;
           if (event.type === "text" && event.part?.text) textParts.push(event.part.text);
           if (event.type === "step_finish") lastStepFinish = event.part ?? null;
+          if (event.type === "tool_use" && event.part?.state?.status === "completed") {
+            toolsUsed.push(event.part.tool ?? "unknown");
+          }
+          if (event.type === "error") {
+            errorEvents.push(event.error?.message ?? event.error?.type ?? JSON.stringify(event.error ?? event));
+          }
         } catch {
           // Ignore non-JSON lines. Logs usually go to stderr.
         }
@@ -107,12 +115,25 @@ async function runOpenCode(input) {
       const diffStat = await git(input.cwd, ["diff", "--stat"]);
       const statusShort = await git(input.cwd, ["status", "--short"]);
 
+      // A model that cannot call tools (e.g. small local models) still makes
+      // `opencode run` exit 0 and "describes" the work in plain text. Treat a
+      // run with zero completed tool calls as a failure unless explicitly allowed.
+      const noToolCalls = toolsUsed.length === 0;
+      const guardTripped = noToolCalls && !input.allowNoTools;
+
       resolve({
-        ok: !killedByTimeout && code === 0,
+        ok: !killedByTimeout && code === 0 && !guardTripped,
+        reason: guardTripped && code === 0 && !killedByTimeout ? "no_tool_calls" : undefined,
+        warning: guardTripped && code === 0 && !killedByTimeout
+          ? "OpenCode finished without a single completed tool call: the model likely only described the work and changed nothing. Verify on disk; check the model (opencode.json `model` or the `model` parameter) supports tool calling. Pass allowNoTools=true for pure text answers."
+          : undefined,
         killedByTimeout,
         exitCode: code,
         signal,
         sessionID,
+        toolCalls: toolsUsed.length,
+        toolsUsed: [...new Set(toolsUsed)],
+        errors: errorEvents.length ? errorEvents : undefined,
         args,
         cwd: input.cwd,
         stdoutOverflow,
@@ -143,6 +164,7 @@ server.tool(
     timeoutMs: z.number().int().min(1000).max(3600000).default(900000).describe("Internal OpenCode timeout; must be below Claude MCP per-server timeout."),
     sessionId: z.string().optional().describe("Continue a specific OpenCode session instead of starting a new one."),
     continueSession: z.boolean().default(false).describe("Continue last OpenCode session; ignored when sessionId is set."),
+    allowNoTools: z.boolean().default(false).describe("Do not fail a run that made zero tool calls. Only for pure text answers; leave false for coding tasks."),
   },
   async (input) => {
     const result = await runOpenCode(input);
