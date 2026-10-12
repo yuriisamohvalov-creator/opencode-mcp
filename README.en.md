@@ -208,11 +208,49 @@ Response:
   "ok": true,
   "exitCode": 0,
   "sessionID": "ses_...",
+  "toolCalls": 2,
+  "toolsUsed": ["write", "shell"],
   "text": "...model's final answer...",
   "diffStat": "...git diff --stat...",
   "statusShort": "...git status --short..."
 }
 ```
+
+## Guard: runs without any tool calls
+
+`opencode run` exits with code `0` even when the model cannot call
+tools and merely **describes** the work in plain text (small local Ollama
+models do this): nothing is written, yet the answer looks like a
+success. The wrapper therefore counts completed `tool_use` events and
+returns `ok: false` when there are none:
+
+```jsonc
+{
+  "ok": false,
+  "reason": "no_tool_calls",
+  "warning": "OpenCode finished without a single completed tool call: ...",
+  "exitCode": 0,
+  "toolCalls": 0,
+  "toolsUsed": []
+}
+```
+
+- The response always carries `toolCalls` (number of completed calls) and
+  `toolsUsed` (unique tool names, e.g. `["write", "shell"]`).
+- If OpenCode emits `error` events (for example `provider.quota:
+  credit_balance_exhausted`), their messages are exposed in `errors` —
+  it does not affect `ok`, but spares you digging for the cause behind an
+  empty `text`.
+- The `allowNoTools: true` parameter disables the check — only for pure
+  text answers. Do not set it for code-changing tasks.
+- The check catches exactly "zero calls". If the model called `read` but
+  wrote nothing, `ok` stays `true` — look at `statusShort` and
+  `toolsUsed`.
+
+**The model matters.** Use a model with working tool calling: set `model`
+in `opencode.json` (top-level key) or pass the `model` parameter per call.
+With a model that cannot call tools the task will not be done, but it is
+now visible immediately instead of after checking the disk.
 
 ## Known ecosystem bugs, fixed in this wrapper
 
