@@ -7,6 +7,8 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
 const execFileP = promisify(execFile);
+// Resolve the CLI portably: explicit override, else PATH lookup.
+const OPENCODE_BIN = process.env.OPENCODE_BIN || "opencode";
 const MAX_TEXT_CHARS = 12_000;
 const MAX_TAIL_CHARS = 4_000;
 
@@ -41,7 +43,7 @@ async function runOpenCode(input) {
   args.push(input.task);
 
   return await new Promise((resolve) => {
-    const child = spawn("/home/ysamohvalov/.opencode/bin/opencode", args, {
+    const child = spawn(OPENCODE_BIN, args, {
       cwd: input.cwd,
       // opencode v2 resolves the active project via $PWD, not the process's
       // real cwd — without this override spawn() reports "Agent not found"
@@ -103,7 +105,7 @@ async function runOpenCode(input) {
       clearTimeout(timer);
       resolve({
         ok: false,
-        error: `Failed to spawn opencode: ${error.message}`,
+        error: `Failed to spawn ${OPENCODE_BIN}: ${error.message}. Set OPENCODE_BIN to the opencode binary path if it is not on PATH.`,
         args,
         cwd: input.cwd,
       });
